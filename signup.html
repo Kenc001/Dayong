@@ -228,19 +228,19 @@
       position: relative;
       overflow: hidden;
       border-top-left-radius: 48px;
-      background: #0d4a30;
+      background: rgb(13, 74, 48);
     }
 
-    /* Green gradient overlay */
+    /* Hard-stop overlay: solid dark green top → fully transparent bottom */
     .hero-overlay {
       position: absolute;
       inset: 0;
       background: linear-gradient(
         180deg,
-        rgba(13, 74, 48, 0.95) 0%,
-        rgba(13, 74, 48, 0.93) 38%,
-        rgba(8, 58, 36, 0.65) 58%,
-        rgba(5, 50, 30, 0.08) 100%
+        rgb(13, 74, 48) 0%,
+        rgb(13, 74, 48) 42%,
+        rgba(13, 74, 48, 0) 52%,
+        rgba(13, 74, 48, 0) 100%
       );
       z-index: 1;
     }
@@ -440,7 +440,7 @@
       alt="Lush green rice terraces"
     />
 
-    <!-- Dark green gradient overlay -->
+    <!-- Solid dark-green top, then fully transparent to reveal photo -->
     <div class="hero-overlay"></div>
 
     <!-- Content -->
