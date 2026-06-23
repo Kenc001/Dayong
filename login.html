@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Get Started Now – Dayong</title>
-  <meta name="description" content="Create your Dayong account and get started today. Sign up with email or continue with Google and Apple." />
+  <title>Welcome Back – Dayong</title>
+  <meta name="description" content="Log in to your Dayong account and access your agri-fintech dashboard." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -47,8 +47,15 @@
       font-size: 28px;
       font-weight: 700;
       color: #111827;
-      margin-bottom: 36px;
+      margin-bottom: 8px;
       line-height: 1.2;
+    }
+
+    .form-subtitle {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 36px;
+      line-height: 1.5;
     }
 
     /* ───── FORM FIELDS ───── */
@@ -56,15 +63,34 @@
       margin-bottom: 20px;
     }
 
-    .field-group label {
+    .field-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .field-group label,
+    .field-label-row label {
       display: block;
       font-size: 13.5px;
       font-weight: 500;
       color: #111827;
-      margin-bottom: 8px;
     }
 
-    .field-group input[type="text"],
+    .forgot-link {
+      font-size: 13px;
+      color: #3b82f6;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .forgot-link:hover {
+      color: #2563eb;
+      text-decoration: underline;
+    }
+
     .field-group input[type="email"],
     .field-group input[type="password"] {
       width: 100%;
@@ -89,15 +115,15 @@
       box-shadow: 0 0 0 3px rgba(45, 87, 66, 0.12);
     }
 
-    /* ───── TERMS CHECKBOX ───── */
-    .terms-row {
+    /* ───── REMEMBER CHECKBOX ───── */
+    .remember-row {
       display: flex;
       align-items: center;
       gap: 10px;
       margin-bottom: 26px;
     }
 
-    .terms-row input[type="checkbox"] {
+    .remember-row input[type="checkbox"] {
       width: 15px;
       height: 15px;
       accent-color: #2d5742;
@@ -105,20 +131,14 @@
       flex-shrink: 0;
     }
 
-    .terms-row label {
+    .remember-row label {
       font-size: 13px;
       color: #374151;
+      cursor: pointer;
     }
 
-    .terms-row label a {
-      color: #374151;
-      font-weight: 500;
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
-    /* ───── SIGNUP BUTTON ───── */
-    .btn-signup {
+    /* ───── LOGIN BUTTON ───── */
+    .btn-login {
       width: 100%;
       height: 48px;
       background: #3a6b4a;
@@ -133,13 +153,13 @@
       transition: background 0.22s ease, transform 0.15s ease, box-shadow 0.22s ease;
     }
 
-    .btn-signup:hover {
+    .btn-login:hover {
       background: #2d5740;
       box-shadow: 0 4px 14px rgba(45, 87, 66, 0.30);
       transform: translateY(-1px);
     }
 
-    .btn-signup:active {
+    .btn-login:active {
       transform: translateY(0);
       box-shadow: none;
     }
@@ -203,31 +223,26 @@
       object-fit: contain;
     }
 
-    /* ───── SIGNIN LINK ───── */
-    .signin-text {
+    /* ───── SIGNUP LINK ───── */
+    .signup-text {
       text-align: center;
       font-size: 14px;
       color: #6b7280;
     }
 
-    .signin-text a {
+    .signup-text a {
       color: #3b82f6;
       font-weight: 500;
       text-decoration: none;
       transition: color 0.2s;
     }
 
-    .signin-text a:hover {
+    .signup-text a:hover {
       color: #2563eb;
       text-decoration: underline;
     }
 
     /* ───── RIGHT – HERO PANEL ───── */
-    /*
-      Solid green background fills the top area.
-      The photo sits at the bottom as an <img> with a mask that fades its
-      top edge — so green shows through above the photo with no colour overlay.
-    */
     .hero-panel {
       flex: 0 0 56%;
       position: relative;
@@ -252,7 +267,6 @@
     }
 
     /* ───── HERO CONTENT ───── */
-    /* 50% height gives room to center content with breathing space top + bottom */
     .hero-content {
       position: absolute;
       top: 0;
@@ -354,14 +368,10 @@
   <section class="form-panel">
     <div class="form-container">
 
-      <h1 class="form-title">Get Started Now</h1>
+      <h1 class="form-title">Welcome back!</h1>
+      <p class="form-subtitle">Enter your Credentials to access your account</p>
 
-      <form id="signup-form" novalidate>
-
-        <div class="field-group">
-          <label for="name">Name</label>
-          <input id="name" type="text" name="name" placeholder="Enter your name" autocomplete="name" />
-        </div>
+      <form id="login-form" novalidate>
 
         <div class="field-group">
           <label for="email">Email address</label>
@@ -369,34 +379,37 @@
         </div>
 
         <div class="field-group">
-          <label for="password">Password</label>
-          <input id="password" type="password" name="password" placeholder="Enter your password" autocomplete="new-password" />
+          <div class="field-label-row">
+            <label for="password">Password</label>
+            <a href="#" class="forgot-link">forgot password</a>
+          </div>
+          <input id="password" type="password" name="password" placeholder="••••••••" autocomplete="current-password" />
         </div>
 
-        <div class="terms-row">
-          <input id="terms" type="checkbox" name="terms" />
-          <label for="terms">I agree to the <a href="#">terms &amp; policy</a></label>
+        <div class="remember-row">
+          <input id="remember" type="checkbox" name="remember" />
+          <label for="remember">Remember for 30 days</label>
         </div>
 
-        <button type="submit" class="btn-signup" id="btn-signup">Signup</button>
+        <button type="submit" class="btn-login">Login</button>
 
       </form>
 
       <div class="or-divider"><span>Or</span></div>
 
       <div class="oauth-row">
-        <button class="btn-oauth" id="btn-google" type="button">
+        <button class="btn-oauth" type="button">
           <img src="icons/icons8-google 1.png" alt="Google logo" />
           Sign in with Google
         </button>
-        <button class="btn-oauth" id="btn-apple" type="button">
+        <button class="btn-oauth" type="button">
           <img src="icons/icons8-apple-logo 1.png" alt="Apple logo" />
           Sign in with Apple
         </button>
       </div>
 
-      <p class="signin-text">
-        Have an account?&nbsp;<a href="login.html" id="link-signin">Sign In</a>
+      <p class="signup-text">
+        Don't have an account?&nbsp;<a href="signup.html">Sign Up</a>
       </p>
 
     </div>
