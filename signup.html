@@ -224,9 +224,9 @@
 
     /* ───── RIGHT – HERO PANEL ───── */
     /*
-      Photo is the CSS background so object-fit:cover always fills correctly
-      at any viewport size. A gradient overlay paints the solid green top
-      section. Content (logo + tagline + social) is real HTML above the overlay.
+      Solid green background fills the top area.
+      The photo sits at the bottom as an <img> with a mask that fades its
+      top edge — so green shows through above the photo with no colour overlay.
     */
     .hero-panel {
       flex: 0 0 56%;
@@ -234,25 +234,21 @@
       overflow: hidden;
       border-top-left-radius: 48px;
       border-bottom-left-radius: 48px;
-      background-image: url('background/Background (2).png');
-      background-size: cover;
-      background-position: center bottom;
+      background: rgb(22, 87, 54);
     }
 
-    /* Solid green at top, fades to transparent revealing the photo below */
-    .hero-panel::before {
-      content: '';
+    /* Rice terrace photo — anchored to bottom, fades in at its top edge */
+    .hero-photo {
       position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to bottom,
-        rgb(22, 87, 54) 0%,
-        rgb(22, 87, 54) 38%,
-        rgba(22, 87, 54, 0.82) 50%,
-        rgba(22, 87, 54, 0.22) 65%,
-        transparent 78%
-      );
-      z-index: 1;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 62%;
+      object-fit: cover;
+      object-position: top center;
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 18%);
+      mask-image: linear-gradient(to bottom, transparent 0%, black 18%);
+      z-index: 0;
     }
 
     /* ───── HERO CONTENT ───── */
@@ -405,6 +401,8 @@
 
   <!-- ═══════════════════════════ RIGHT: HERO ═══════════════════════════ -->
   <section class="hero-panel">
+
+    <img class="hero-photo" src="background/Background (2).png" alt="" aria-hidden="true" />
 
     <div class="hero-content">
 
