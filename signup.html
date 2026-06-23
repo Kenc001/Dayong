@@ -30,7 +30,7 @@
 
     /* ───── LEFT – FORM PANEL ───── */
     .form-panel {
-      flex: 0 0 48%;
+      flex: 0 0 44%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -224,53 +224,37 @@
 
     /* ───── RIGHT – HERO PANEL ───── */
     .hero-panel {
-      flex: 0 0 52%;
+      flex: 0 0 56%;
       position: relative;
       overflow: hidden;
       border-top-left-radius: 48px;
-      background: #0d4a30;
+      border-bottom-left-radius: 48px;
+      background: rgb(28, 100, 63);
     }
 
-    /* Green gradient overlay */
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        180deg,
-        rgba(5, 50, 30, 0.82) 0%,
-        rgba(8, 60, 38, 0.65) 40%,
-        rgba(5, 50, 30, 0.20) 100%
-      );
-      z-index: 1;
-    }
-
-    /* Background image */
+    /* Mask group PNG: transparent top (green bg shows through) + photo below */
     .hero-bg {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center bottom;
+      object-position: top center;
       z-index: 0;
     }
 
-    /* Content overlay */
+    /* Hero content hidden — PNG provides all visuals */
     .hero-content {
-      position: relative;
-      z-index: 2;
-      padding: 60px 64px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
+      display: none;
     }
+
+    /* Social icon overlay removed — PNG provides all hero visuals */
 
     /* ───── LOGO ───── */
     .logo-wrapper {
       display: flex;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 48px;
     }
 
     .logo-svg {
@@ -433,15 +417,16 @@
   <!-- ═══════════════════════════ RIGHT: HERO ═══════════════════════════ -->
   <section class="hero-panel">
 
-    <!-- Background photo -->
+    <!-- Mask group PNG: RGBA portrait image, transparent top shows green bg,
+         photo bottom shows trees + rice terraces naturally -->
     <img
       class="hero-bg"
-      src="background/Background (2).png"
+      src="login page/Mask group.png"
       alt="Lush green rice terraces"
     />
 
-    <!-- Dark green gradient overlay -->
-    <div class="hero-overlay"></div>
+    <!-- Hidden content block (PNG provides all visuals) -->
+    <div class="hero-content"></div>
 
     <!-- Content -->
     <div class="hero-content">
@@ -630,7 +615,7 @@
       </div>
 
     </div>
-  </section>
+=======
 
 </div>
 
