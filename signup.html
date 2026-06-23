@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get Started Now – Dayong</title>
+  <meta name="description" content="Create your Dayong account and get started today. Sign up with email or continue with Google and Apple." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background: #ffffff;
+    }
+
+    /* ───── LAYOUT ───── */
+    .page-wrapper {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* ───── LEFT – FORM PANEL ───── */
+    .form-panel {
+      flex: 0 0 48%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 80px;
+      background: #ffffff;
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .form-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 36px;
+      line-height: 1.2;
+    }
+
+    /* ───── FORM FIELDS ───── */
+    .field-group {
+      margin-bottom: 20px;
+    }
+
+    .field-group label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .field-group input[type="text"],
+    .field-group input[type="email"],
+    .field-group input[type="password"] {
+      width: 100%;
+      height: 44px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 0 14px;
+      font-size: 13.5px;
+      color: #374151;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .field-group input::placeholder {
+      color: #9ca3af;
+    }
+
+    .field-group input:focus {
+      border-color: #2d5742;
+      box-shadow: 0 0 0 3px rgba(45, 87, 66, 0.12);
+    }
+
+    /* ───── TERMS CHECKBOX ───── */
+    .terms-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 26px;
+    }
+
+    .terms-row input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      accent-color: #2d5742;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .terms-row label {
+      font-size: 13px;
+      color: #374151;
+    }
+
+    .terms-row label a {
+      color: #374151;
+      font-weight: 500;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* ───── SIGNUP BUTTON ───── */
+    .btn-signup {
+      width: 100%;
+      height: 48px;
+      background: #3a6b4a;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.02em;
+      transition: background 0.22s ease, transform 0.15s ease, box-shadow 0.22s ease;
+    }
+
+    .btn-signup:hover {
+      background: #2d5740;
+      box-shadow: 0 4px 14px rgba(45, 87, 66, 0.30);
+      transform: translateY(-1px);
+    }
+
+    .btn-signup:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    /* ───── OR DIVIDER ───── */
+    .or-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .or-divider::before,
+    .or-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    .or-divider span {
+      font-size: 13px;
+      color: #6b7280;
+      white-space: nowrap;
+    }
+
+    /* ───── OAUTH BUTTONS ───── */
+    .oauth-row {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .btn-oauth {
+      flex: 1;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 6px;
+      background: #ffffff;
+      font-size: 13px;
+      font-weight: 500;
+      color: #374151;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-oauth:hover {
+      background: #f9fafb;
+      border-color: #9ca3af;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .btn-oauth img {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+    }
+
+    /* ───── SIGNIN LINK ───── */
+    .signin-text {
+      text-align: center;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .signin-text a {
+      color: #3b82f6;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .signin-text a:hover {
+      color: #2563eb;
+      text-decoration: underline;
+    }
+
+    /* ───── RIGHT – HERO PANEL ───── */
+    .hero-panel {
+      flex: 0 0 52%;
+      position: relative;
+      overflow: hidden;
+      border-top-left-radius: 48px;
+      background: #0d4a30;
+    }
+
+    /* Green gradient overlay */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(5, 50, 30, 0.82) 0%,
+        rgba(8, 60, 38, 0.65) 40%,
+        rgba(5, 50, 30, 0.20) 100%
+      );
+      z-index: 1;
+    }
+
+    /* Background image */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center bottom;
+      z-index: 0;
+    }
+
+    /* Content overlay */
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 60px 64px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    /* ───── LOGO ───── */
+    .logo-wrapper {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-img {
+      width: 200px;
+      height: auto;
+      filter: brightness(0) invert(1);
+    }
+
+    /* ───── TAGLINE ───── */
+    .hero-tagline {
+      max-width: 280px;
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: rgba(255, 255, 255, 0.72);
+      margin-bottom: 32px;
+    }
+
+    /* ───── SOCIAL ICONS ───── */
+    .social-icons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .social-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #0f0f0f;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+      text-decoration: none;
+    }
+
+    .social-btn:hover {
+      background: #1c1c1c;
+      transform: scale(1.08);
+    }
+
+    .social-btn svg {
+      width: 17px;
+      height: 17px;
+      fill: #ffffff;
+    }
+
+    /* ───── ANIMATIONS ───── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-container { animation: fadeInUp 0.55s ease both; }
+    .hero-content   { animation: fadeInUp 0.65s ease 0.1s both; }
+
+    /* ───── RESPONSIVE ───── */
+    @media (max-width: 900px) {
+      .page-wrapper {
+        flex-direction: column;
+      }
+      .form-panel {
+        flex: none;
+        padding: 48px 32px;
+      }
+      .hero-panel {
+        flex: none;
+        min-height: 380px;
+        border-top-left-radius: 0;
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- ═══════════════════════════ LEFT: FORM ═══════════════════════════ -->
+  <section class="form-panel">
+    <div class="form-container">
+
+      <h1 class="form-title">Get Started Now</h1>
+
+      <form id="signup-form" novalidate>
+
+        <!-- Name -->
+        <div class="field-group">
+          <label for="name">Name</label>
+          <input
+            id="name"
+            type="text"
+            name="name"
+            placeholder="Enter your name"
+            autocomplete="name"
+          />
+        </div>
+
+        <!-- Email -->
+        <div class="field-group">
+          <label for="email">Email address</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            autocomplete="email"
+          />
+        </div>
+
+        <!-- Password -->
+        <div class="field-group">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            placeholder="Enter your password"
+            autocomplete="new-password"
+          />
+        </div>
+
+        <!-- Terms -->
+        <div class="terms-row">
+          <input id="terms" type="checkbox" name="terms" />
+          <label for="terms">I agree to the <a href="#">terms &amp; policy</a></label>
+        </div>
+
+        <!-- Signup CTA -->
+        <button type="submit" class="btn-signup" id="btn-signup">Signup</button>
+
+      </form>
+
+      <!-- OR Divider -->
+      <div class="or-divider">
+        <span>Or</span>
+      </div>
+
+      <!-- OAuth -->
+      <div class="oauth-row">
+        <button class="btn-oauth" id="btn-google" type="button">
+          <img src="icons/icons8-google 1.png" alt="Google logo" />
+          Sign in with Google
+        </button>
+        <button class="btn-oauth" id="btn-apple" type="button">
+          <img src="icons/icons8-apple-logo 1.png" alt="Apple logo" />
+          Sign in with Apple
+        </button>
+      </div>
+
+      <!-- Sign In Link -->
+      <p class="signin-text">
+        Have an account?&nbsp;<a href="#" id="link-signin">Sign In</a>
+      </p>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════ RIGHT: HERO ═══════════════════════════ -->
+  <section class="hero-panel">
+
+    <!-- Background photo -->
+    <img
+      class="hero-bg"
+      src="background/Background (2).png"
+      alt="Lush green rice terraces"
+    />
+
+    <!-- Dark green gradient overlay -->
+    <div class="hero-overlay"></div>
+
+    <!-- Content -->
+    <div class="hero-content">
+
+      <!-- Logo -->
+      <div class="logo-wrapper">
+        <img
+          class="logo-img"
+          src="logo/dayong logo.svg"
+          alt="Dayong"
+        />
+      </div>
+
+      <!-- Tagline -->
+      <p class="hero-tagline">
+        There are many variations of passages
+        of lorem ipsum available, but the
+        majority suffered.
+      </p>
+
+      <!-- Social Icons -->
+      <div class="social-icons">
+
+        <!-- Twitter / X -->
+        <a href="#" class="social-btn" id="social-twitter" aria-label="Twitter">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L2.25 2.25h6.839l4.258 5.63ZM17.083 19.77h1.833L7.084 4.126H5.117Z"/>
+          </svg>
+        </a>
+
+        <!-- Facebook -->
+        <a href="#" class="social-btn" id="social-facebook" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.413c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.953h-1.514c-1.491 0-1.956.93-1.956 1.883v2.286h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073Z"/>
+          </svg>
+        </a>
+
+        <!-- Pinterest -->
+        <a href="#" class="social-btn" id="social-pinterest" aria-label="Pinterest">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0Z"/>
+          </svg>
+        </a>
+
+        <!-- Instagram -->
+        <a href="#" class="social-btn" id="social-instagram" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162S8.597 18.163 12 18.163s6.162-2.759 6.162-6.162S15.403 5.838 12 5.838zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+        </a>
+
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>
