@@ -228,19 +228,22 @@
       position: relative;
       overflow: hidden;
       border-top-left-radius: 48px;
-      background: rgb(13, 74, 48);
+      background: rgb(28, 100, 63);
     }
 
-    /* Hard-stop overlay: solid dark green top → fully transparent bottom */
+    /* Smooth organic overlay: rich teal-green top → blends into photo */
     .hero-overlay {
       position: absolute;
       inset: 0;
       background: linear-gradient(
         180deg,
-        rgb(13, 74, 48) 0%,
-        rgb(13, 74, 48) 42%,
-        rgba(13, 74, 48, 0) 52%,
-        rgba(13, 74, 48, 0) 100%
+        rgb(28, 100, 63)  0%,
+        rgb(28, 100, 63)  32%,
+        rgba(28, 100, 63, 0.88) 42%,
+        rgba(28, 100, 63, 0.55) 52%,
+        rgba(28, 100, 63, 0.18) 63%,
+        rgba(28, 100, 63, 0.04) 74%,
+        rgba(28, 100, 63, 0)   100%
       );
       z-index: 1;
     }
