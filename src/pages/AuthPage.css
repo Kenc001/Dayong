@@ -241,8 +241,6 @@
   flex: 0 0 50%;
   position: relative;
   overflow: hidden;
-  border-top-left-radius: 48px;
-  border-bottom-left-radius: 48px;
   background: rgb(22, 87, 54);
 }
 
