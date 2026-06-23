@@ -228,40 +228,46 @@
       position: relative;
       overflow: hidden;
       border-top-left-radius: 48px;
+      border-bottom-left-radius: 48px;
       background: rgb(28, 100, 63);
     }
 
-    /* Smooth organic overlay: rich teal-green top → blends into photo */
+    /* Solid teal-green top → clean reveal of natural photo */
     .hero-overlay {
       position: absolute;
       inset: 0;
       background: linear-gradient(
         180deg,
         rgb(28, 100, 63)  0%,
-        rgb(28, 100, 63)  32%,
-        rgba(28, 100, 63, 0.88) 42%,
-        rgba(28, 100, 63, 0.55) 52%,
-        rgba(28, 100, 63, 0.18) 63%,
-        rgba(28, 100, 63, 0.04) 74%,
+        rgb(28, 100, 63)  40%,
+        rgba(28, 100, 63, 0.70) 50%,
+        rgba(28, 100, 63, 0.20) 60%,
+        rgba(28, 100, 63, 0)    68%,
         rgba(28, 100, 63, 0)   100%
       );
       z-index: 1;
     }
 
-    /* Background image — full image anchored at top */
+    /* Background photo */
     .hero-bg {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: top center;
+      object-position: center bottom;
       z-index: 0;
     }
 
-    /* Content overlay — hidden; image provides all visuals */
+    /* Content overlay */
     .hero-content {
-      display: none;
+      position: relative;
+      z-index: 2;
+      padding: 60px 64px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
 
     /* ───── LOGO ───── */
@@ -430,21 +436,30 @@
   <!-- ═══════════════════════════ RIGHT: HERO ═══════════════════════════ -->
   <section class="hero-panel">
 
-    <!-- Full background: Mask group (solid green top + rice terrace photo) -->
+    <!-- Background photo -->
     <img
       class="hero-bg"
-      src="login page/Mask group.png"
+      src="background/Background (2).png"
       alt="Lush green rice terraces"
     />
 
-    <!-- Content (logo & tagline hidden — baked into image; icons kept interactive) -->
+    <!-- Overlay: solid teal top → transparent bottom -->
+    <div class="hero-overlay"></div>
+
+    <!-- Content -->
     <div class="hero-content">
 
-      <!-- Logo — hidden, image provides visual -->
-      <div class="logo-wrapper" style="visibility:hidden; margin-bottom:0; height:0; overflow:hidden;"></div>
+      <!-- Logo -->
+      <div class="logo-wrapper">
+        <img class="logo-img" src="logo/dayong logo.svg" alt="Dayong" />
+      </div>
 
-      <!-- Tagline — hidden, image provides visual -->
-      <p class="hero-tagline" style="visibility:hidden; height:0; overflow:hidden; margin:0;"></p>
+      <!-- Tagline -->
+      <p class="hero-tagline">
+        There are many variations of passages<br>
+        of lorem ipsum available, but the<br>
+        majority suffered.
+      </p>
 
       <!-- Social Icons -->
       <div class="social-icons">
