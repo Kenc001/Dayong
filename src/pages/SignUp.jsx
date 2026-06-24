@@ -17,8 +17,6 @@ export default function SignUp() {
   const [code, setCode] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [oauthLoading, setOauthLoading] = useState('')
-  const [oauthError, setOauthError] = useState('')
 
   if (isSignedIn) return <Navigate to="/dashboard" replace />
 
@@ -138,37 +136,31 @@ export default function SignUp() {
                   </label>
                 </div>
 
-                <button type="submit" className="btn-primary" disabled={loading || !!oauthLoading}>
+                <button type="submit" className="btn-primary" disabled={loading}>
                   {loading ? 'Creating account…' : 'Signup'}
                 </button>
               </form>
 
               <div className="or-divider"><span>Or</span></div>
 
-              {oauthError && <p className="auth-error">{oauthError}</p>}
-
               <div className="oauth-row">
                 <button
                   className="btn-oauth"
                   type="button"
                   onClick={() => handleOAuth('google')}
-                  disabled={!!oauthLoading || loading}
+                  disabled={loading}
                 >
-                  {oauthLoading === 'google'
-                    ? <span className="oauth-spinner" />
-                    : <img src="/icons/icons8-google 1.png" alt="Google logo" />}
-                  {oauthLoading === 'google' ? 'Redirecting…' : 'Sign in with Google'}
+                  <img src="/icons/icons8-google 1.png" alt="Google logo" />
+                  Sign in with Google
                 </button>
                 <button
                   className="btn-oauth"
                   type="button"
                   onClick={() => handleOAuth('apple')}
-                  disabled={!!oauthLoading || loading}
+                  disabled={loading}
                 >
-                  {oauthLoading === 'apple'
-                    ? <span className="oauth-spinner" />
-                    : <img src="/icons/icons8-apple-logo 1.png" alt="Apple logo" />}
-                  {oauthLoading === 'apple' ? 'Redirecting…' : 'Sign in with Apple'}
+                  <img src="/icons/icons8-apple-logo 1.png" alt="Apple logo" />
+                  Sign in with Apple
                 </button>
               </div>
 
