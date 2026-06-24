@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { Link, useNavigate, Navigate } from 'react-router-dom'
-import { useSignUp, useClerk, useAuth } from '@clerk/react'
+import { useSignUp, useAuth } from '@clerk/react'
 import './AuthPage.css'
 
 export default function SignUp() {
   const { isLoaded, signUp, setActive } = useSignUp()
-  const { openSignIn } = useClerk()
   const { isSignedIn } = useAuth()
   const navigate = useNavigate()
 
@@ -74,10 +73,12 @@ export default function SignUp() {
     }
   }
 
-  function handleOAuth() {
-    openSignIn({
-      afterSignInUrl: '/dashboard',
-      afterSignUpUrl: '/dashboard',
+  async function handleOAuth(provider) {
+    if (!isLoaded) return
+    await signUp.authenticateWithRedirect({
+      strategy: `oauth_${provider}`,
+      redirectUrl: '/sso-callback',
+      redirectUrlComplete: '/dashboard',
     })
   }
 
