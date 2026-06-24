@@ -1,82 +1,124 @@
-import { SignIn } from '@clerk/react'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSignIn } from '@clerk/react'
 import './AuthPage.css'
 
 export default function Login() {
+  const { isLoaded, signIn, setActive } = useSignIn()
+  const navigate = useNavigate()
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [remember, setRemember] = useState(false)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    if (!isLoaded) return
+    setError('')
+    setLoading(true)
+    try {
+      const result = await signIn.create({
+        identifier: email,
+        password,
+      })
+      if (result.status === 'complete') {
+        await setActive({ session: result.createdSessionId })
+        navigate('/dashboard')
+      } else {
+        setError('Sign-in incomplete. Please try again.')
+      }
+    } catch (err) {
+      setError(err.errors?.[0]?.longMessage ?? err.message ?? 'Sign-in failed.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleOAuth(provider) {
+    if (!isLoaded) return
+    try {
+      await signIn.authenticateWithRedirect({
+        strategy: `oauth_${provider}`,
+        redirectUrl: `${window.location.origin}/sso-callback`,
+        redirectUrlComplete: `${window.location.origin}/dashboard`,
+      })
+    } catch (err) {
+      setError(err.errors?.[0]?.longMessage ?? err.message ?? `${provider} sign-in failed.`)
+    }
+  }
+
   return (
     <div className="page-wrapper">
       <section className="form-panel">
-        <SignIn
-          routing="path"
-          path="/login"
-          signUpUrl="/signup"
-          afterSignInUrl="/dashboard"
-          appearance={{
-            variables: {
-              colorPrimary: '#3a6b4a',
-              colorBackground: '#ffffff',
-              colorText: '#111827',
-              colorTextSecondary: '#6b7280',
-              colorInputBackground: '#ffffff',
-              colorInputText: '#374151',
-              borderRadius: '6px',
-              fontFamily: 'Inter, sans-serif',
-              fontSize: '14px',
-            },
-            elements: {
-              rootBox: {
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-              },
-              card: {
-                boxShadow: 'none',
-                border: 'none',
-                padding: '0',
-                width: '100%',
-                maxWidth: '380px',
-                backgroundColor: 'transparent',
-              },
-              headerTitle: {
-                fontSize: '28px',
-                fontWeight: '700',
-                color: '#111827',
-              },
-              headerSubtitle: {
-                color: '#6b7280',
-              },
-              socialButtonsBlockButton: {
-                border: '1.5px solid #d1d5db',
-                backgroundColor: '#ffffff',
-                color: '#374151',
-                fontWeight: '500',
-                '&:hover': {
-                  backgroundColor: '#f9fafb',
-                  borderColor: '#9ca3af',
-                },
-              },
-              formButtonPrimary: {
-                backgroundColor: '#3a6b4a',
-                fontWeight: '600',
-                fontSize: '15px',
-                '&:hover': {
-                  backgroundColor: '#2d5740',
-                },
-              },
-              footerActionLink: {
-                color: '#3a6b4a',
-                fontWeight: '500',
-              },
-              formFieldInput: {
-                borderColor: '#d1d5db',
-                '&:focus': {
-                  borderColor: '#3a6b4a',
-                  boxShadow: '0 0 0 3px rgba(58, 107, 74, 0.12)',
-                },
-              },
-            },
-          }}
-        />
+        <div className="form-container">
+          <h1 className="form-title">Welcome back!</h1>
+          <p className="form-subtitle">Enter your Credentials to access your account</p>
+
+          {error && <p className="auth-error">{error}</p>}
+
+          <form onSubmit={handleSubmit} noValidate>
+            <div className="field-group">
+              <label htmlFor="email">Email address</label>
+              <input
+                id="email" type="email" name="email"
+                placeholder="Enter your email"
+                autoComplete="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="field-group">
+              <div className="field-label-row">
+                <label htmlFor="password">Password</label>
+                <Link to="/forgot-password" className="forgot-link">forgot password</Link>
+              </div>
+              <input
+                id="password" type="password" name="password"
+                placeholder="••••••••"
+                autoComplete="current-password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="remember-row">
+              <input
+                id="remember" type="checkbox" name="remember"
+                checked={remember}
+                onChange={e => setRemember(e.target.checked)}
+              />
+              <label htmlFor="remember">Remember for 30 days</label>
+            </div>
+
+            <button type="submit" className="btn-primary" disabled={loading}>
+              {loading ? 'Signing in…' : 'Login'}
+            </button>
+          </form>
+
+          <div className="or-divider"><span>Or</span></div>
+
+          <div className="oauth-row">
+            <button className="btn-oauth" type="button" onClick={() => handleOAuth('google')} disabled={loading}>
+              <img src="/icons/icons8-google 1.png" alt="Google logo" />
+              Sign in with Google
+            </button>
+            <button className="btn-oauth" type="button" onClick={() => handleOAuth('apple')} disabled={loading}>
+              <img src="/icons/icons8-apple-logo 1.png" alt="Apple logo" />
+              Sign in with Apple
+            </button>
+          </div>
+
+          <p className="footer-text">
+            Don&apos;t have an account?&nbsp;<Link to="/signup">Sign Up</Link>
+          </p>
+        </div>
       </section>
+
       <HeroPanel />
     </div>
   )
