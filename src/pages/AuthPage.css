@@ -325,6 +325,18 @@
   fill: #ffffff;
 }
 
+/* ───── AUTH ERROR ───── */
+.auth-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+
 /* ───── ANIMATIONS ───── */
 @keyframes fadeInUp {
   from {

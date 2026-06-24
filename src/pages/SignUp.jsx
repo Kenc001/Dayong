@@ -1,42 +1,104 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSignUp } from '@clerk/react'
 import './AuthPage.css'
 
 export default function SignUp() {
-  const [terms, setTerms] = useState(false)
+  const { isLoaded, signUp, setActive } = useSignUp()
+  const navigate = useNavigate()
 
-  function handleSubmit(e) {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [terms, setTerms] = useState(false)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  async function handleSubmit(e) {
     e.preventDefault()
+    if (!isLoaded) return
+    if (!terms) { setError('Please agree to the terms & policy.'); return }
+    setError('')
+    setLoading(true)
+    try {
+      const [firstName, ...rest] = name.trim().split(' ')
+      const lastName = rest.join(' ')
+      const result = await signUp.create({
+        firstName: firstName || '',
+        lastName: lastName || '',
+        emailAddress: email,
+        password,
+      })
+      if (result.status === 'complete') {
+        await setActive({ session: result.createdSessionId })
+        navigate('/dashboard')
+      } else {
+        setError('Sign-up incomplete. Please check your email for verification.')
+      }
+    } catch (err) {
+      setError(err.errors?.[0]?.longMessage ?? err.message ?? 'Sign-up failed.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleOAuth(provider) {
+    if (!isLoaded) return
+    await signUp.authenticateWithRedirect({
+      strategy: `oauth_${provider}`,
+      redirectUrl: '/sso-callback',
+      redirectUrlComplete: '/dashboard',
+    })
   }
 
   return (
     <div className="page-wrapper">
-      {/* ── LEFT: FORM ── */}
       <section className="form-panel">
         <div className="form-container">
           <h1 className="form-title">Get Started Now</h1>
 
+          {error && <p className="auth-error">{error}</p>}
+
           <form onSubmit={handleSubmit} noValidate>
             <div className="field-group">
               <label htmlFor="name">Name</label>
-              <input id="name" type="text" name="name" placeholder="Enter your name" autoComplete="name" />
+              <input
+                id="name" type="text" name="name"
+                placeholder="Enter your name"
+                autoComplete="name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                required
+              />
             </div>
 
             <div className="field-group">
               <label htmlFor="email">Email address</label>
-              <input id="email" type="email" name="email" placeholder="Enter your email" autoComplete="email" />
+              <input
+                id="email" type="email" name="email"
+                placeholder="Enter your email"
+                autoComplete="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+              />
             </div>
 
             <div className="field-group">
               <label htmlFor="password">Password</label>
-              <input id="password" type="password" name="password" placeholder="Enter your password" autoComplete="new-password" />
+              <input
+                id="password" type="password" name="password"
+                placeholder="Enter your password"
+                autoComplete="new-password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+              />
             </div>
 
             <div className="terms-row">
               <input
-                id="terms"
-                type="checkbox"
-                name="terms"
+                id="terms" type="checkbox" name="terms"
                 checked={terms}
                 onChange={e => setTerms(e.target.checked)}
               />
@@ -45,17 +107,19 @@ export default function SignUp() {
               </label>
             </div>
 
-            <button type="submit" className="btn-primary">Signup</button>
+            <button type="submit" className="btn-primary" disabled={loading}>
+              {loading ? 'Creating account…' : 'Signup'}
+            </button>
           </form>
 
           <div className="or-divider"><span>Or</span></div>
 
           <div className="oauth-row">
-            <button className="btn-oauth" type="button">
+            <button className="btn-oauth" type="button" onClick={() => handleOAuth('google')}>
               <img src="/icons/icons8-google 1.png" alt="Google logo" />
               Sign in with Google
             </button>
-            <button className="btn-oauth" type="button">
+            <button className="btn-oauth" type="button" onClick={() => handleOAuth('apple')}>
               <img src="/icons/icons8-apple-logo 1.png" alt="Apple logo" />
               Sign in with Apple
             </button>
@@ -67,7 +131,6 @@ export default function SignUp() {
         </div>
       </section>
 
-      {/* ── RIGHT: HERO ── */}
       <HeroPanel />
     </div>
   )

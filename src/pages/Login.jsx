@@ -1,26 +1,70 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSignIn } from '@clerk/react'
 import './AuthPage.css'
 
 export default function Login() {
-  const [remember, setRemember] = useState(false)
+  const { isLoaded, signIn, setActive } = useSignIn()
+  const navigate = useNavigate()
 
-  function handleSubmit(e) {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [remember, setRemember] = useState(false)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  async function handleSubmit(e) {
     e.preventDefault()
+    if (!isLoaded) return
+    setError('')
+    setLoading(true)
+    try {
+      const result = await signIn.create({
+        identifier: email,
+        password,
+      })
+      if (result.status === 'complete') {
+        await setActive({ session: result.createdSessionId })
+        navigate('/dashboard')
+      } else {
+        setError('Sign-in incomplete. Please try again.')
+      }
+    } catch (err) {
+      setError(err.errors?.[0]?.longMessage ?? err.message ?? 'Sign-in failed.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleOAuth(provider) {
+    if (!isLoaded) return
+    await signIn.authenticateWithRedirect({
+      strategy: `oauth_${provider}`,
+      redirectUrl: '/sso-callback',
+      redirectUrlComplete: '/dashboard',
+    })
   }
 
   return (
     <div className="page-wrapper">
-      {/* ── LEFT: FORM ── */}
       <section className="form-panel">
         <div className="form-container">
           <h1 className="form-title">Welcome back!</h1>
           <p className="form-subtitle">Enter your Credentials to access your account</p>
 
+          {error && <p className="auth-error">{error}</p>}
+
           <form onSubmit={handleSubmit} noValidate>
             <div className="field-group">
               <label htmlFor="email">Email address</label>
-              <input id="email" type="email" name="email" placeholder="Enter your email" autoComplete="email" />
+              <input
+                id="email" type="email" name="email"
+                placeholder="Enter your email"
+                autoComplete="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+              />
             </div>
 
             <div className="field-group">
@@ -28,31 +72,38 @@ export default function Login() {
                 <label htmlFor="password">Password</label>
                 <a href="#" className="forgot-link">forgot password</a>
               </div>
-              <input id="password" type="password" name="password" placeholder="••••••••" autoComplete="current-password" />
+              <input
+                id="password" type="password" name="password"
+                placeholder="••••••••"
+                autoComplete="current-password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+              />
             </div>
 
             <div className="remember-row">
               <input
-                id="remember"
-                type="checkbox"
-                name="remember"
+                id="remember" type="checkbox" name="remember"
                 checked={remember}
                 onChange={e => setRemember(e.target.checked)}
               />
               <label htmlFor="remember">Remember for 30 days</label>
             </div>
 
-            <button type="submit" className="btn-primary">Login</button>
+            <button type="submit" className="btn-primary" disabled={loading}>
+              {loading ? 'Signing in…' : 'Login'}
+            </button>
           </form>
 
           <div className="or-divider"><span>Or</span></div>
 
           <div className="oauth-row">
-            <button className="btn-oauth" type="button">
+            <button className="btn-oauth" type="button" onClick={() => handleOAuth('google')}>
               <img src="/icons/icons8-google 1.png" alt="Google logo" />
               Sign in with Google
             </button>
-            <button className="btn-oauth" type="button">
+            <button className="btn-oauth" type="button" onClick={() => handleOAuth('apple')}>
               <img src="/icons/icons8-apple-logo 1.png" alt="Apple logo" />
               Sign in with Apple
             </button>
@@ -64,7 +115,6 @@ export default function Login() {
         </div>
       </section>
 
-      {/* ── RIGHT: HERO ── */}
       <HeroPanel />
     </div>
   )
