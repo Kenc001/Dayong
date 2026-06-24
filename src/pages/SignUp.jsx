@@ -71,17 +71,25 @@ export default function SignUp() {
   }
 
   async function handleOAuth(provider) {
-    if (!isLoaded) return
+    console.log("SignUp OAuth button clicked! isLoaded:", isLoaded, "signUp:", signUp);
+    if (!isLoaded) {
+      alert(`Clerk is stuck loading on SignUp. (isLoaded=${isLoaded}, signUp=${!!signUp}). Please try disabling browser extensions or use Incognito mode.`);
+      return;
+    }
     setError('')
     const origin = window.location.origin
     try {
+      console.log(`Starting OAuth for ${provider} from SignUp...`);
       await signUp.authenticateWithRedirect({
         strategy: `oauth_${provider}`,
         redirectUrl: `${origin}/sso-callback`,
         redirectUrlComplete: `${origin}/dashboard`,
       })
     } catch (err) {
-      setError(err.errors?.[0]?.longMessage ?? err.message ?? `${provider} sign-in failed.`)
+      console.error("OAuth Error:", err);
+      const msg = err.errors?.[0]?.longMessage ?? err.message ?? `${provider} sign-in failed.`;
+      setError(msg);
+      alert(`Error: ${msg}`);
     }
   }
 
@@ -144,19 +152,19 @@ export default function SignUp() {
                   </label>
                 </div>
 
-                <button type="submit" className="btn-primary" disabled={loading}>
-                  {loading ? 'Creating account…' : 'Signup'}
+                <button type="submit" className="btn-primary" disabled={loading || !isLoaded}>
+                  {loading ? 'Creating account…' : (!isLoaded ? 'Loading...' : 'Signup')}
                 </button>
               </form>
 
               <div className="or-divider"><span>Or</span></div>
 
               <div className="oauth-row">
-                <button className="btn-oauth" type="button" onClick={() => handleOAuth('google')}>
+                <button className="btn-oauth" type="button" onClick={() => handleOAuth('google')} disabled={!isLoaded || loading}>
                   <img src="/icons/icons8-google 1.png" alt="Google logo" />
                   Sign in with Google
                 </button>
-                <button className="btn-oauth" type="button" onClick={() => handleOAuth('apple')}>
+                <button className="btn-oauth" type="button" onClick={() => handleOAuth('apple')} disabled={!isLoaded || loading}>
                   <img src="/icons/icons8-apple-logo 1.png" alt="Apple logo" />
                   Sign in with Apple
                 </button>

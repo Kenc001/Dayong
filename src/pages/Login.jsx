@@ -38,17 +38,25 @@ export default function Login() {
   }
 
   async function handleOAuth(provider) {
-    if (!isLoaded) return
+    console.log("Button clicked! isLoaded:", isLoaded, "signIn:", signIn);
+    if (!isLoaded) {
+      alert(`Clerk is stuck loading. (isLoaded=${isLoaded}, signIn=${!!signIn}). Please restart your development server (Ctrl+C then npm run dev) and turn off any adblockers.`);
+      return;
+    }
     setError('')
     const origin = window.location.origin
     try {
+      console.log(`Starting OAuth for ${provider}...`);
       await signIn.authenticateWithRedirect({
         strategy: `oauth_${provider}`,
         redirectUrl: `${origin}/sso-callback`,
         redirectUrlComplete: `${origin}/dashboard`,
       })
     } catch (err) {
-      setError(err.errors?.[0]?.longMessage ?? err.message ?? `${provider} sign-in failed.`)
+      console.error("OAuth Error:", err);
+      const msg = err.errors?.[0]?.longMessage ?? err.message ?? `${provider} sign-in failed.`;
+      setError(msg);
+      alert(`Error: ${msg}`);
     }
   }
 
@@ -106,11 +114,11 @@ export default function Login() {
           <div className="or-divider"><span>Or</span></div>
 
           <div className="oauth-row">
-            <button className="btn-oauth" type="button" onClick={() => handleOAuth('google')}>
+            <button className="btn-oauth" type="button" onClick={() => handleOAuth('google')} disabled={loading}>
               <img src="/icons/icons8-google 1.png" alt="Google logo" />
               Sign in with Google
             </button>
-            <button className="btn-oauth" type="button" onClick={() => handleOAuth('apple')}>
+            <button className="btn-oauth" type="button" onClick={() => handleOAuth('apple')} disabled={loading}>
               <img src="/icons/icons8-apple-logo 1.png" alt="Apple logo" />
               Sign in with Apple
             </button>
