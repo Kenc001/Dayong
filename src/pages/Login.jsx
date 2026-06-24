@@ -37,26 +37,13 @@ export default function Login() {
     }
   }
 
-  async function handleOAuth(provider) {
-    console.log("Button clicked! isLoaded:", isLoaded, "signIn:", signIn);
-    if (!isLoaded) {
-      alert(`Clerk is stuck loading. (isLoaded=${isLoaded}, signIn=${!!signIn}). Please restart your development server (Ctrl+C then npm run dev) and turn off any adblockers.`);
-      return;
-    }
-    setError('')
+  function handleOAuth(provider) {
     const origin = window.location.origin
-    try {
-      console.log(`Starting OAuth for ${provider}...`);
-      await signIn.authenticateWithRedirect({
-        strategy: `oauth_${provider}`,
-        redirectUrl: `${origin}/sso-callback`,
-        redirectUrlComplete: `${origin}/dashboard`,
-      })
-    } catch (err) {
-      console.error("OAuth Error:", err);
-      const msg = err.errors?.[0]?.longMessage ?? err.message ?? `${provider} sign-in failed.`;
-      setError(msg);
-      alert(`Error: ${msg}`);
+    const url = `${origin}/oauth-init?provider=${provider}`
+    if (window !== window.top) {
+      window.open(url, '_blank')
+    } else {
+      window.location.href = url
     }
   }
 
