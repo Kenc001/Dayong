@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate, Navigate } from 'react-router-dom'
-import { useSignUp, useAuth } from '@clerk/react'
+import { useSignUp, useSignIn, useAuth } from '@clerk/react'
 import './AuthPage.css'
 
 export default function SignUp() {
   const { isLoaded, signUp, setActive } = useSignUp()
+  const { signIn } = useSignIn()
   const { isSignedIn } = useAuth()
   const navigate = useNavigate()
 
@@ -71,15 +72,17 @@ export default function SignUp() {
   }
 
   async function handleOAuth(provider) {
-    if (!isLoaded || oauthLoading) return
+    if (!isLoaded || oauthLoading || !signIn) return
     setOauthError('')
     setOauthLoading(provider)
     try {
-      await signUp.authenticateWithRedirect({
+      const res = await signIn.create({
         strategy: `oauth_${provider}`,
         redirectUrl: `${window.location.origin}/sso-callback`,
-        redirectUrlComplete: '/dashboard',
+        actionCompleteRedirectUrl: `${window.location.origin}/dashboard`,
       })
+      const url = res.firstFactorVerification?.externalVerificationRedirectURL
+      if (url) window.location.href = url
     } catch (err) {
       const msg = err.errors?.[0]?.longMessage ?? err.message ?? 'OAuth sign-up failed.'
       setOauthError(msg)
