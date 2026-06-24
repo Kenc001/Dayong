@@ -39,10 +39,11 @@ export default function Login() {
 
   async function handleOAuth(provider) {
     if (!isLoaded) return
+    const origin = window.location.origin
     await signIn.authenticateWithRedirect({
       strategy: `oauth_${provider}`,
-      redirectUrl: '/sso-callback',
-      redirectUrlComplete: '/dashboard',
+      redirectUrl: `${origin}/sso-callback`,
+      redirectUrlComplete: `${origin}/dashboard`,
     })
   }
 
