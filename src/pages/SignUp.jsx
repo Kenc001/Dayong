@@ -8,8 +8,6 @@ export default function SignUp() {
   const { isSignedIn } = useAuth()
   const navigate = useNavigate()
 
-  if (isSignedIn) return <Navigate to="/dashboard" replace />
-
   const [step, setStep] = useState('register')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -18,6 +16,10 @@ export default function SignUp() {
   const [code, setCode] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [oauthLoading, setOauthLoading] = useState('')
+  const [oauthError, setOauthError] = useState('')
+
+  if (isSignedIn) return <Navigate to="/dashboard" replace />
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -28,12 +30,7 @@ export default function SignUp() {
     try {
       const [firstName, ...rest] = name.trim().split(' ')
       const lastName = rest.join(' ')
-      await signUp.create({
-        firstName: firstName || '',
-        lastName: lastName || '',
-        emailAddress: email,
-        password,
-      })
+      await signUp.create({ firstName: firstName || '', lastName: lastName || '', emailAddress: email, password })
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
       setStep('verify')
     } catch (err) {
@@ -74,12 +71,20 @@ export default function SignUp() {
   }
 
   async function handleOAuth(provider) {
-    if (!isLoaded) return
-    await signUp.authenticateWithRedirect({
-      strategy: `oauth_${provider}`,
-      redirectUrl: '/sso-callback',
-      redirectUrlComplete: '/dashboard',
-    })
+    if (!isLoaded || oauthLoading) return
+    setOauthError('')
+    setOauthLoading(provider)
+    try {
+      await signUp.authenticateWithRedirect({
+        strategy: `oauth_${provider}`,
+        redirectUrl: `${window.location.origin}/sso-callback`,
+        redirectUrlComplete: '/dashboard',
+      })
+    } catch (err) {
+      const msg = err.errors?.[0]?.longMessage ?? err.message ?? 'OAuth sign-up failed.'
+      setOauthError(msg)
+      setOauthLoading('')
+    }
   }
 
   return (
@@ -141,21 +146,37 @@ export default function SignUp() {
                   </label>
                 </div>
 
-                <button type="submit" className="btn-primary" disabled={loading}>
+                <button type="submit" className="btn-primary" disabled={loading || !!oauthLoading}>
                   {loading ? 'Creating account…' : 'Signup'}
                 </button>
               </form>
 
               <div className="or-divider"><span>Or</span></div>
 
+              {oauthError && <p className="auth-error">{oauthError}</p>}
+
               <div className="oauth-row">
-                <button className="btn-oauth" type="button" onClick={() => handleOAuth('google')}>
-                  <img src="/icons/icons8-google 1.png" alt="Google logo" />
-                  Sign in with Google
+                <button
+                  className="btn-oauth"
+                  type="button"
+                  onClick={() => handleOAuth('google')}
+                  disabled={!!oauthLoading || loading}
+                >
+                  {oauthLoading === 'google'
+                    ? <span className="oauth-spinner" />
+                    : <img src="/icons/icons8-google 1.png" alt="Google logo" />}
+                  {oauthLoading === 'google' ? 'Redirecting…' : 'Sign in with Google'}
                 </button>
-                <button className="btn-oauth" type="button" onClick={() => handleOAuth('apple')}>
-                  <img src="/icons/icons8-apple-logo 1.png" alt="Apple logo" />
-                  Sign in with Apple
+                <button
+                  className="btn-oauth"
+                  type="button"
+                  onClick={() => handleOAuth('apple')}
+                  disabled={!!oauthLoading || loading}
+                >
+                  {oauthLoading === 'apple'
+                    ? <span className="oauth-spinner" />
+                    : <img src="/icons/icons8-apple-logo 1.png" alt="Apple logo" />}
+                  {oauthLoading === 'apple' ? 'Redirecting…' : 'Sign in with Apple'}
                 </button>
               </div>
 

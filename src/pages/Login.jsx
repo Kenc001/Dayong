@@ -8,13 +8,15 @@ export default function Login() {
   const { isSignedIn } = useAuth()
   const navigate = useNavigate()
 
-  if (isSignedIn) return <Navigate to="/dashboard" replace />
-
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [oauthLoading, setOauthLoading] = useState('')
+  const [oauthError, setOauthError] = useState('')
+
+  if (isSignedIn) return <Navigate to="/dashboard" replace />
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -22,10 +24,7 @@ export default function Login() {
     setError('')
     setLoading(true)
     try {
-      const result = await signIn.create({
-        identifier: email,
-        password,
-      })
+      const result = await signIn.create({ identifier: email, password })
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId })
         navigate('/dashboard')
@@ -40,12 +39,20 @@ export default function Login() {
   }
 
   async function handleOAuth(provider) {
-    if (!isLoaded) return
-    await signIn.authenticateWithRedirect({
-      strategy: `oauth_${provider}`,
-      redirectUrl: '/sso-callback',
-      redirectUrlComplete: '/dashboard',
-    })
+    if (!isLoaded || oauthLoading) return
+    setOauthError('')
+    setOauthLoading(provider)
+    try {
+      await signIn.authenticateWithRedirect({
+        strategy: `oauth_${provider}`,
+        redirectUrl: `${window.location.origin}/sso-callback`,
+        redirectUrlComplete: '/dashboard',
+      })
+    } catch (err) {
+      const msg = err.errors?.[0]?.longMessage ?? err.message ?? 'OAuth sign-in failed.'
+      setOauthError(msg)
+      setOauthLoading('')
+    }
   }
 
   return (
@@ -94,21 +101,37 @@ export default function Login() {
               <label htmlFor="remember">Remember for 30 days</label>
             </div>
 
-            <button type="submit" className="btn-primary" disabled={loading}>
+            <button type="submit" className="btn-primary" disabled={loading || !!oauthLoading}>
               {loading ? 'Signing in…' : 'Login'}
             </button>
           </form>
 
           <div className="or-divider"><span>Or</span></div>
 
+          {oauthError && <p className="auth-error">{oauthError}</p>}
+
           <div className="oauth-row">
-            <button className="btn-oauth" type="button" onClick={() => handleOAuth('google')} disabled={loading}>
-              <img src="/icons/icons8-google 1.png" alt="Google logo" />
-              Sign in with Google
+            <button
+              className="btn-oauth"
+              type="button"
+              onClick={() => handleOAuth('google')}
+              disabled={!!oauthLoading || loading}
+            >
+              {oauthLoading === 'google'
+                ? <span className="oauth-spinner" />
+                : <img src="/icons/icons8-google 1.png" alt="Google logo" />}
+              {oauthLoading === 'google' ? 'Redirecting…' : 'Sign in with Google'}
             </button>
-            <button className="btn-oauth" type="button" onClick={() => handleOAuth('apple')} disabled={loading}>
-              <img src="/icons/icons8-apple-logo 1.png" alt="Apple logo" />
-              Sign in with Apple
+            <button
+              className="btn-oauth"
+              type="button"
+              onClick={() => handleOAuth('apple')}
+              disabled={!!oauthLoading || loading}
+            >
+              {oauthLoading === 'apple'
+                ? <span className="oauth-spinner" />
+                : <img src="/icons/icons8-apple-logo 1.png" alt="Apple logo" />}
+              {oauthLoading === 'apple' ? 'Redirecting…' : 'Sign in with Apple'}
             </button>
           </div>
 

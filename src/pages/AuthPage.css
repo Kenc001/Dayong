@@ -211,6 +211,25 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
+.btn-oauth:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.oauth-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #d1d5db;
+  border-top-color: #3a6b4a;
+  border-radius: 50%;
+  animation: oauth-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes oauth-spin {
+  to { transform: rotate(360deg); }
+}
+
 .btn-oauth img {
   width: 18px;
   height: 18px;
