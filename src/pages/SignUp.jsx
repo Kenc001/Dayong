@@ -5,7 +5,7 @@ import './AuthPage.css'
 
 export default function SignUp() {
   const { isLoaded, signUp, setActive } = useSignUp()
-  const { signIn } = useSignIn()
+  const { signIn, isLoaded: signInLoaded } = useSignIn()
   const { isSignedIn } = useAuth()
   const navigate = useNavigate()
 
@@ -72,7 +72,7 @@ export default function SignUp() {
   }
 
   async function handleOAuth(provider) {
-    if (!isLoaded || oauthLoading || !signIn) return
+    if (!isLoaded || !signInLoaded || oauthLoading) return
     setOauthError('')
     setOauthLoading(provider)
     try {
@@ -82,7 +82,7 @@ export default function SignUp() {
         actionCompleteRedirectUrl: `${window.location.origin}/dashboard`,
       })
       const url = res.firstFactorVerification?.externalVerificationRedirectURL
-      if (url) window.location.href = url
+      if (url) window.open(url, '_top')
     } catch (err) {
       const msg = err.errors?.[0]?.longMessage ?? err.message ?? 'OAuth sign-up failed.'
       setOauthError(msg)

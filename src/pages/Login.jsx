@@ -49,7 +49,7 @@ export default function Login() {
         actionCompleteRedirectUrl: `${window.location.origin}/dashboard`,
       })
       const url = res.firstFactorVerification?.externalVerificationRedirectURL
-      if (url) window.location.href = url
+      if (url) window.open(url, '_top')
     } catch (err) {
       const msg = err.errors?.[0]?.longMessage ?? err.message ?? 'OAuth sign-in failed.'
       setOauthError(msg)
