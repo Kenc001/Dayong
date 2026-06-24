@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSignIn } from '@clerk/react'
+
 import './AuthPage.css'
 
 export default function Login() {
@@ -70,7 +71,7 @@ export default function Login() {
             <div className="field-group">
               <div className="field-label-row">
                 <label htmlFor="password">Password</label>
-                <a href="#" className="forgot-link">forgot password</a>
+                <Link to="/forgot-password" className="forgot-link">forgot password</Link>
               </div>
               <input
                 id="password" type="password" name="password"

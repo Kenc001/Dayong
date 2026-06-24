@@ -3,6 +3,7 @@ import { useAuth, AuthenticateWithRedirectCallback } from '@clerk/react'
 import SignUp from './pages/SignUp'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
+import ForgotPassword from './pages/ForgotPassword'
 
 function ProtectedRoute({ children }) {
   const { isLoaded, isSignedIn } = useAuth()
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/" element={<Navigate to="/signup" replace />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/sso-callback" element={<AuthenticateWithRedirectCallback />} />
         <Route
           path="/dashboard"
