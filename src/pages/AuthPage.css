@@ -261,6 +261,8 @@
   position: relative;
   overflow: hidden;
   background: rgb(22, 87, 54);
+  border-top-left-radius: 48px;
+  border-bottom-left-radius: 48px;
 }
 
 .hero-photo {
