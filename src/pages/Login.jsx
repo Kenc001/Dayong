@@ -38,14 +38,20 @@ export default function Login() {
 
   async function handleOAuth(provider) {
     if (!isLoaded) return
+    setLoading(true)
     try {
-      await signIn.authenticateWithRedirect({
+      const res = await signIn.create({
         strategy: `oauth_${provider}`,
         redirectUrl: `${window.location.origin}/sso-callback`,
-        redirectUrlComplete: `${window.location.origin}/dashboard`,
+        actionCompleteRedirectUrl: `${window.location.origin}/dashboard`,
       })
+      const redirectUrl = res.firstFactorVerification?.externalVerificationRedirectURL
+      if (redirectUrl) {
+        window.location.href = redirectUrl
+      }
     } catch (err) {
       setError(err.errors?.[0]?.longMessage ?? err.message ?? `${provider} sign-in failed.`)
+      setLoading(false)
     }
   }
 

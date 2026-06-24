@@ -1,0 +1,2 @@
+- [Clerk v6 OAuth API](clerk-v6-oauth.md) — `authenticateWithRedirect` does not exist; use `signIn.create()` + `firstFactorVerification.externalVerificationRedirectURL`
+- [Static HTML overrides React routes](vite-html-routes.md) — `signup.html` / `login.html` at project root are served by Vite as static pages, bypassing the React app; moved to `_reference/`
