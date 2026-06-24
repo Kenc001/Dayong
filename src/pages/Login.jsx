@@ -1,12 +1,15 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useSignIn, useClerk } from '@clerk/react'
+import { Link, useNavigate, Navigate } from 'react-router-dom'
+import { useSignIn, useClerk, useAuth } from '@clerk/react'
 import './AuthPage.css'
 
 export default function Login() {
   const { isLoaded, signIn, setActive } = useSignIn()
   const { openSignIn } = useClerk()
+  const { isSignedIn } = useAuth()
   const navigate = useNavigate()
+
+  if (isSignedIn) return <Navigate to="/dashboard" replace />
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
