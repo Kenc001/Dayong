@@ -1,215 +1,85 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useSignUp } from '@clerk/react'
+import { SignUp } from '@clerk/react'
 import './AuthPage.css'
 
-export default function SignUp() {
-  const { isLoaded, signUp, setActive } = useSignUp()
-  const navigate = useNavigate()
-
-  const [step, setStep] = useState('register')
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [terms, setTerms] = useState(false)
-  const [code, setCode] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  async function handleSubmit(e) {
-    e.preventDefault()
-    if (!isLoaded) return
-    if (!terms) { setError('Please agree to the terms & policy.'); return }
-    setError('')
-    setLoading(true)
-    try {
-      const [firstName, ...rest] = name.trim().split(' ')
-      const lastName = rest.join(' ')
-      await signUp.create({
-        firstName: firstName || '',
-        lastName: lastName || '',
-        emailAddress: email,
-        password,
-      })
-      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
-      setStep('verify')
-    } catch (err) {
-      setError(err.errors?.[0]?.longMessage ?? err.message ?? 'Sign-up failed.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  async function handleVerify(e) {
-    e.preventDefault()
-    if (!isLoaded) return
-    setError('')
-    setLoading(true)
-    try {
-      const result = await signUp.attemptEmailAddressVerification({ code })
-      if (result.status === 'complete') {
-        await setActive({ session: result.createdSessionId })
-        navigate('/dashboard')
-      } else {
-        setError('Verification incomplete. Please try again.')
-      }
-    } catch (err) {
-      setError(err.errors?.[0]?.longMessage ?? err.message ?? 'Invalid code. Please try again.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  async function handleResend() {
-    if (!isLoaded) return
-    setError('')
-    try {
-      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
-    } catch (err) {
-      setError(err.errors?.[0]?.longMessage ?? 'Failed to resend code.')
-    }
-  }
-
-  function handleOAuth(provider) {
-    const origin = window.location.origin
-    const url = `${origin}/oauth-init?provider=${provider}`
-    if (window !== window.top) {
-      window.open(url, '_blank')
-    } else {
-      window.location.href = url
-    }
-  }
-
+export default function SignUpPage() {
   return (
     <div className="page-wrapper">
       <section className="form-panel">
-        <div className="form-container">
-
-          {step === 'register' ? (
-            <>
-              <h1 className="form-title">Get Started Now</h1>
-
-              {error && <p className="auth-error">{error}</p>}
-
-              <form onSubmit={handleSubmit} noValidate>
-                <div className="field-group">
-                  <label htmlFor="name">Name</label>
-                  <input
-                    id="name" type="text" name="name"
-                    placeholder="Enter your name"
-                    autoComplete="name"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="field-group">
-                  <label htmlFor="email">Email address</label>
-                  <input
-                    id="email" type="email" name="email"
-                    placeholder="Enter your email"
-                    autoComplete="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="field-group">
-                  <label htmlFor="password">Password</label>
-                  <input
-                    id="password" type="password" name="password"
-                    placeholder="Enter your password"
-                    autoComplete="new-password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="terms-row">
-                  <input
-                    id="terms" type="checkbox" name="terms"
-                    checked={terms}
-                    onChange={e => setTerms(e.target.checked)}
-                  />
-                  <label htmlFor="terms">
-                    I agree to the <a href="#">terms &amp; policy</a>
-                  </label>
-                </div>
-
-                <button type="submit" className="btn-primary" disabled={loading}>
-                  {loading ? 'Creating account…' : 'Signup'}
-                </button>
-              </form>
-
-              <div className="or-divider"><span>Or</span></div>
-
-              <div className="oauth-row">
-                <button className="btn-oauth" type="button" onClick={() => handleOAuth('google')}>
-                  <img src="/icons/icons8-google 1.png" alt="Google logo" />
-                  Sign in with Google
-                </button>
-                <button className="btn-oauth" type="button" onClick={() => handleOAuth('apple')}>
-                  <img src="/icons/icons8-apple-logo 1.png" alt="Apple logo" />
-                  Sign in with Apple
-                </button>
-              </div>
-
-              <p className="footer-text">
-                Have an account?&nbsp;<Link to="/login">Sign In</Link>
-              </p>
-            </>
-          ) : (
-            <>
-              <h1 className="form-title">Verify your email</h1>
-              <p className="form-subtitle">
-                We sent a code to <strong>{email}</strong>. Enter it below to confirm your account.
-              </p>
-
-              {error && <p className="auth-error">{error}</p>}
-
-              <form onSubmit={handleVerify} noValidate>
-                <div className="field-group">
-                  <label htmlFor="code">Verification code</label>
-                  <input
-                    id="code" type="text" name="code"
-                    placeholder="Enter your 6-digit code"
-                    autoComplete="one-time-code"
-                    value={code}
-                    onChange={e => setCode(e.target.value)}
-                    required
-                  />
-                </div>
-
-                <button type="submit" className="btn-primary" disabled={loading}>
-                  {loading ? 'Verifying…' : 'Verify email'}
-                </button>
-              </form>
-
-              <p className="resend-link-row">
-                Didn't receive it?{' '}
-                <button type="button" className="link-btn" onClick={handleResend}>
-                  Resend code
-                </button>
-              </p>
-
-              <p className="footer-text" style={{ marginTop: '16px' }}>
-                <button
-                  type="button"
-                  className="link-btn"
-                  onClick={() => { setStep('register'); setError(''); setCode('') }}
-                >
-                  ← Back
-                </button>
-              </p>
-            </>
-          )}
-
-        </div>
+        <SignUp
+          routing="path"
+          path="/signup"
+          signInUrl="/login"
+          afterSignUpUrl="/dashboard"
+          appearance={{
+            variables: {
+              colorPrimary: '#3a6b4a',
+              colorBackground: '#ffffff',
+              colorText: '#111827',
+              colorTextSecondary: '#6b7280',
+              colorInputBackground: '#ffffff',
+              colorInputText: '#374151',
+              borderRadius: '6px',
+              fontFamily: 'Inter, sans-serif',
+              fontSize: '14px',
+            },
+            elements: {
+              rootBox: {
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+              },
+              card: {
+                boxShadow: 'none',
+                border: 'none',
+                padding: '0',
+                width: '100%',
+                maxWidth: '380px',
+                backgroundColor: 'transparent',
+              },
+              headerTitle: {
+                fontSize: '28px',
+                fontWeight: '700',
+                color: '#111827',
+              },
+              headerSubtitle: {
+                color: '#6b7280',
+              },
+              socialButtonsBlockButton: {
+                border: '1.5px solid #d1d5db',
+                backgroundColor: '#ffffff',
+                color: '#374151',
+                fontWeight: '500',
+                '&:hover': {
+                  backgroundColor: '#f9fafb',
+                  borderColor: '#9ca3af',
+                },
+              },
+              formButtonPrimary: {
+                backgroundColor: '#3a6b4a',
+                fontWeight: '600',
+                fontSize: '15px',
+                '&:hover': {
+                  backgroundColor: '#2d5740',
+                },
+              },
+              footerActionLink: {
+                color: '#3a6b4a',
+                fontWeight: '500',
+              },
+              identityPreviewEditButton: {
+                color: '#3a6b4a',
+              },
+              formFieldInput: {
+                borderColor: '#d1d5db',
+                '&:focus': {
+                  borderColor: '#3a6b4a',
+                  boxShadow: '0 0 0 3px rgba(58, 107, 74, 0.12)',
+                },
+              },
+            },
+          }}
+        />
       </section>
-
       <HeroPanel />
     </div>
   )

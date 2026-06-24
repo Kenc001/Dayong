@@ -29,4 +29,4 @@ Runs on port 5000.
 
 ## User preferences
 
-- Keep HTML files (login.html, signup.html) as reference originals; do not delete them.
+- Keep HTML files (login.html, signup.html) as reference originals; do not delete them. They live in `_reference/` (moved from root so Vite doesn't serve them as routes instead of the React app).
