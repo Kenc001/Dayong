@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Link, useNavigate, Navigate } from 'react-router-dom'
-import { useSignUp, useSignIn, useAuth } from '@clerk/react'
+import { useSignUp, useAuth, useClerk } from '@clerk/react'
 import './AuthPage.css'
 
 export default function SignUp() {
   const { isLoaded, signUp, setActive } = useSignUp()
-  const { signIn, isLoaded: signInLoaded } = useSignIn()
   const { isSignedIn } = useAuth()
+  const { openSignIn } = useClerk()
   const navigate = useNavigate()
 
   const [step, setStep] = useState('register')
@@ -71,23 +71,12 @@ export default function SignUp() {
     }
   }
 
-  async function handleOAuth(provider) {
-    if (!isLoaded || !signInLoaded || oauthLoading) return
-    setOauthError('')
-    setOauthLoading(provider)
-    try {
-      const res = await signIn.create({
-        strategy: `oauth_${provider}`,
-        redirectUrl: `${window.location.origin}/sso-callback`,
-        actionCompleteRedirectUrl: `${window.location.origin}/dashboard`,
-      })
-      const url = res.firstFactorVerification?.externalVerificationRedirectURL
-      if (url) window.open(url, '_top')
-    } catch (err) {
-      const msg = err.errors?.[0]?.longMessage ?? err.message ?? 'OAuth sign-up failed.'
-      setOauthError(msg)
-      setOauthLoading('')
-    }
+  function handleOAuth(provider) {
+    openSignIn({
+      redirectUrl: `${window.location.origin}/sso-callback`,
+      afterSignInUrl: `${window.location.origin}/dashboard`,
+      afterSignUpUrl: `${window.location.origin}/dashboard`,
+    })
   }
 
   return (
