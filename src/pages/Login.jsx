@@ -39,12 +39,17 @@ export default function Login() {
 
   async function handleOAuth(provider) {
     if (!isLoaded) return
+    setError('')
     const origin = window.location.origin
-    await signIn.authenticateWithRedirect({
-      strategy: `oauth_${provider}`,
-      redirectUrl: `${origin}/sso-callback`,
-      redirectUrlComplete: `${origin}/dashboard`,
-    })
+    try {
+      await signIn.authenticateWithRedirect({
+        strategy: `oauth_${provider}`,
+        redirectUrl: `${origin}/sso-callback`,
+        redirectUrlComplete: `${origin}/dashboard`,
+      })
+    } catch (err) {
+      setError(err.errors?.[0]?.longMessage ?? err.message ?? `${provider} sign-in failed.`)
+    }
   }
 
   return (
