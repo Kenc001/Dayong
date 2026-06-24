@@ -37,3 +37,8 @@ externalPort = 80
 [deployment]
 deploymentTarget = "static"
 publicDir = "."
+
+[userenv]
+
+[userenv.shared]
+VITE_CLERK_PUBLISHABLE_KEY = "pk_test_cHJvdWQtd2FzcC0xMy5jbGVyay5hY2NvdW50cy5kZXYk"
